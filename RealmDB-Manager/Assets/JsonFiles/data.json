@@ -1,0 +1,16 @@
+{"things":[
+    {
+        "id": 0,
+        "pos": 0,
+        "type": "image_thing"
+    },{
+        "id": 1,
+        "pos": 1,
+        "type": "news_thing"
+    },
+    {
+        "id": 2,
+        "pos": 2,
+        "type": "weather_thing"
+    }
+]}

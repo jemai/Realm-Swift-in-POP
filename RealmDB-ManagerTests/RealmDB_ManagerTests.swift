@@ -8,27 +8,32 @@
 
 import XCTest
 @testable import RealmDB_Manager
+@testable import RealmSwift
+@testable import Realm
 
 class RealmDB_ManagerTests: XCTestCase {
-
+    
+    struct service: LocalFileReader { }
+    struct db: Persister { }
+    var things = [Thing]()
+    
     override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        service.loadLocalData(to: Mapper.self, fileName: "data", fileType: .json)
+        things = Array(db.select(type: Thing.self))
     }
-
+    
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        db.resetDB()
     }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    func testQuery() {
+        assert(things.count == 3, "the count should be 3")
     }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func testFilter() {
+        let queryResult = db.select(type: Thing.self, filter: NSPredicate(format: "id == %d", 0))
+        assert(queryResult.count == 1, "the count should be 1 since we are quering by id, and the id is activated in the object")
+        let aThing = queryResult.first!
+        assert(aThing.id == 0, "id should be the same as the filtered one")
     }
-
 }
